@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shopapp/screens/product_detail_screen.dart';
 import 'package:shopapp/screens/product_overview_screen.dart';
+import 'package:shopapp/widgets/product_item.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +15,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      theme: ThemeData(
+          iconTheme: const IconThemeData(
+            color: Colors.deepOrange,
+          ),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
+              .copyWith(background: Colors.grey.shade300)),
       home: ProductOverviewScreen(),
+      routes: {
+        ProductItem.routeName : (context) => ProductDetailScreen(),
+      },
     );
   }
 }
