@@ -1,5 +1,7 @@
 
-class Product{
+import 'package:flutter/cupertino.dart';
+
+class Product with ChangeNotifier{
   final String id;
   final String title;
   final double price;
@@ -15,5 +17,10 @@ class Product{
     required this.description,
     this.isFavourite=false,
   });
+
+  void toogleFavouriteStatus(){
+    isFavourite = !isFavourite;
+    notifyListeners();
+  }
 
 }
