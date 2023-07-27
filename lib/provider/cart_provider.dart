@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 
 class CartItem {
@@ -15,11 +16,15 @@ class CartItem {
 }
 
 class CartProvider with ChangeNotifier {
-  late Map<String, CartItem> _items;
+   Map<String, CartItem> _items= { };
 
   Map<String, CartItem> get items {
     return {..._items}; // returning a copy of _items
   }
+
+   int get itemCount{
+    return items.length;
+   }
 
   void addItem(
     String productId,
@@ -46,5 +51,26 @@ class CartProvider with ChangeNotifier {
         ),
       );
     }
+    notifyListeners();
   }
+
+  double get totalAmount{
+    double total =0.0;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity ;
+    });
+    return total;
+  }
+
+  void removeItem(String productKey)
+  {
+    _items.remove(productKey);
+    notifyListeners();
+  }
+
+  void clearCartOnOrder(){
+    _items= {};
+    notifyListeners();
+  }
+
 }

@@ -18,7 +18,28 @@ class ProductDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(loadedItemProduct.title),
       ),
-      body: const Text('hello world'),
+      body: Column(
+        children: [
+          Container(height: 300,
+          width: double.infinity,
+          child: Image.network(loadedItemProduct.imageUrl, ),
+          ),
+          const SizedBox(height: 10,),
+          Text(
+              '\$${loadedItemProduct.price}',style:const TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),),
+          const SizedBox(height: 10,),
+          Text(loadedItemProduct.description,style:const TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+          softWrap: true,
+            // softwrap : true takes the sentence to next line if not covered in single line
+          ),
+        ],
+      )
     );
   }
 }

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopapp/provider/cart_provider.dart';
+import 'package:shopapp/screens/cart_screen.dart';
+import 'package:shopapp/widgets/badge.dart';
 import 'package:shopapp/widgets/product_grid.dart';
 
-enum FilterOption{
+enum FilterOption {
   favourites,
   allProducts,
 }
+
 class ProductOverviewScreen extends StatefulWidget {
   const ProductOverviewScreen({super.key});
 
@@ -13,7 +18,7 @@ class ProductOverviewScreen extends StatefulWidget {
 }
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
-bool isFavourite = false;
+  bool isFavourite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +27,18 @@ bool isFavourite = false;
         title: const Text('My Shop'),
         actions: [
           PopupMenuButton(
-            onSelected: (FilterOption selectedItemValue){
-              if(selectedItemValue == FilterOption.favourites)
-                {
-                  setState(() {
-                    isFavourite= true;
-                  });
-                }
-              else
-                {
-                  setState(() {
-                    isFavourite= false;
-                  });
-                }
+            onSelected: (FilterOption selectedItemValue) {
+              if (selectedItemValue == FilterOption.favourites) {
+                setState(() {
+                  isFavourite = true;
+                });
+              } else {
+                setState(() {
+                  isFavourite = false;
+                });
+              }
             },
-            icon:const Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: FilterOption.favourites,
@@ -47,7 +49,20 @@ bool isFavourite = false;
                 child: Text('All Products'),
               ),
             ],
-          )
+          ),
+          Consumer<CartProvider>(
+            builder: (_, cartData, ch ) {
+              return BadgeForCart(
+                  value: cartData.itemCount.toString(),
+                  child: IconButton(
+                    onPressed: (){
+                      Navigator.of(context).pushNamed(CartScreen.routeName);
+                    },
+                    icon:const Icon(Icons.shopping_cart),
+                  ),);
+            },
+
+          ),
         ],
       ),
       body: ProductGridView(isFavourite: isFavourite),

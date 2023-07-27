@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopapp/provider/cart_provider.dart';
+import 'package:shopapp/provider/orderProvider.dart';
 import 'package:shopapp/provider/product_provider.dart';
+import 'package:shopapp/screens/cart_screen.dart';
 import 'package:shopapp/screens/product_detail_screen.dart';
 import 'package:shopapp/screens/product_overview_screen.dart';
 import 'package:shopapp/widgets/product_item.dart';
@@ -28,8 +30,10 @@ class MyApp extends StatelessWidget {
         // but im using .value notation because of the tutorial im watching
         create:(context)=> CartProvider(),
       ),
+      ChangeNotifierProvider(create: (context) => OrderProvider(),)
     ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
             iconTheme: const IconThemeData(
@@ -39,6 +43,7 @@ class MyApp extends StatelessWidget {
                 .copyWith(background: Colors.grey.shade300)),
         home: ProductOverviewScreen(),
         routes: {
+          CartScreen.routeName :(context) => CartScreen(),
           ProductItem.routeName : (context) => ProductDetailScreen(),
         },
       ),
