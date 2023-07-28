@@ -30,8 +30,8 @@ class MyCartItem extends StatelessWidget {
         // listen : false removes the items from cart but listen: true doesn't why?
       },
       background: Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         alignment: Alignment.centerRight,
         color: Theme.of(context).colorScheme.error,
         child: const Icon(Icons.delete,color: Colors.white,),

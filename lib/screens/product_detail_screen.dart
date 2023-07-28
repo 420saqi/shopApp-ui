@@ -20,7 +20,7 @@ class ProductDetailScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Container(height: 300,
+          SizedBox(height: 300,
           width: double.infinity,
           child: Image.network(loadedItemProduct.imageUrl, ),
           ),

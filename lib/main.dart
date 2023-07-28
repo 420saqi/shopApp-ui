@@ -3,12 +3,13 @@ import 'package:shopapp/provider/cart_provider.dart';
 import 'package:shopapp/provider/orderProvider.dart';
 import 'package:shopapp/provider/product_provider.dart';
 import 'package:shopapp/screens/cart_screen.dart';
+import 'package:shopapp/screens/orders_screen.dart';
 import 'package:shopapp/screens/product_detail_screen.dart';
 import 'package:shopapp/screens/product_overview_screen.dart';
 import 'package:shopapp/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -41,10 +42,13 @@ class MyApp extends StatelessWidget {
             ),
             colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
                 .copyWith(background: Colors.grey.shade300)),
-        home: ProductOverviewScreen(),
+        // home: ProductOverviewScreen(),
+        initialRoute: '/',
         routes: {
-          CartScreen.routeName :(context) => CartScreen(),
-          ProductItem.routeName : (context) => ProductDetailScreen(),
+          '/':(context) => const ProductOverviewScreen(),
+          CartScreen.routeName :(context) => const CartScreen(),
+          ProductItem.routeName : (context) => const ProductDetailScreen(),
+          OrdersScreen.routeName: (context) => const OrdersScreen(),
         },
       ),
     );

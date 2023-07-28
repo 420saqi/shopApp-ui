@@ -29,7 +29,7 @@ final bool isFavourite;
           // productsList for each item , so .value will save us from errors
           // that might can occur if we used without .value notation of provider
           value: productsList[index],
-                child: ProductItem(
+                child: const ProductItem(
         ),),
         itemCount: productsList.length,
       );

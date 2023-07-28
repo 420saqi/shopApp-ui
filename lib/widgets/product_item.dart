@@ -7,11 +7,12 @@ import '../provider/product.dart';
 class ProductItem extends StatelessWidget {
   static const routeName = 'product_detail_screen';
 
+  const ProductItem({super.key});
+
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context , listen: false);
     final cartProvider = Provider.of<CartProvider>(context , listen: false);
-    print('build is called');
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
