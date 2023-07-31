@@ -52,17 +52,17 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             ],
           ),
           Consumer<CartProvider>(
-            builder: (_, cartData, ch ) {
+            builder: (_, cartData, ch) {
               return BadgeForCart(
-                  value: cartData.itemCount.toString(),
-                  child: IconButton(
-                    onPressed: (){
-                      Navigator.of(context).pushNamed(CartScreen.routeName);
-                    },
-                    icon:const Icon(Icons.shopping_cart),
-                  ),);
+                value: cartData.itemCount.toString(),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(CartScreen.routeName);
+                  },
+                  icon: const Icon(Icons.shopping_cart),
+                ),
+              );
             },
-
           ),
         ],
       ),
