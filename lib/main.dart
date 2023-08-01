@@ -10,8 +10,6 @@ import 'package:shopapp/screens/user_product_screen.dart';
 import 'package:shopapp/widgets/product_item.dart';
 import 'package:provider/provider.dart';
 
-
-
 void main() {
   runApp(const MyApp());
 }
