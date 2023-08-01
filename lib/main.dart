@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:shopapp/provider/cart_provider.dart';
-import 'package:shopapp/provider/orderProvider.dart';
-import 'package:shopapp/provider/product_provider.dart';
-import 'package:shopapp/screens/cart_screen.dart';
-import 'package:shopapp/screens/orders_screen.dart';
-import 'package:shopapp/screens/product_detail_screen.dart';
-import 'package:shopapp/screens/product_overview_screen.dart';
-import 'package:shopapp/screens/user_product_screen.dart';
-import 'package:shopapp/widgets/product_item.dart';
+
 import 'package:provider/provider.dart';
+import './screens/edit_products.dart';
+import './provider/cart_provider.dart';
+import './provider/orderProvider.dart';
+import './provider/product_provider.dart';
+import './screens/cart_screen.dart';
+import './screens/orders_screen.dart';
+import './screens/product_detail_screen.dart';
+import './screens/product_overview_screen.dart';
+import './screens/user_product_screen.dart';
+import './widgets/product_item.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,6 +54,8 @@ class MyApp extends StatelessWidget {
           ProductItem.routeName : (context) => const ProductDetailScreen(),
           OrdersScreen.routeName: (context) => const OrdersScreen(),
           UserProductScreen.routeName:(context) => const UserProductScreen(),
+          EditProductsScreen.routeName: (context) => const EditProductsScreen(),
+
         },
       ),
     );
