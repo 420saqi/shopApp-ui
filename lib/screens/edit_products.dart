@@ -18,6 +18,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   final _imageController = TextEditingController();
   final _imageUrlFocuNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  bool isInit = true;
   var _existingProduct = Product(
     id: '',
     title: '',
@@ -25,6 +26,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     imageUrl: '',
     description: '',
   );
+
+  var initValues = {
+    'title': '',
+    'price': '',
+    'description': '',
+    'imageUrl': '',
+  };
 
   @override
   void dispose() {
@@ -49,18 +57,45 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
 
   void _saveFormData() {
     final isValid = _formKey.currentState!.validate();
-    if(!isValid)
-      {
-        return ;
-      }
+    if (!isValid) {
+      return;
+    }
     _formKey.currentState?.save();
-    Provider.of<ProductsProvider>(context).addProduct(_existingProduct);
+    if (_existingProduct.id.isNotEmpty) // means product already exists
+    {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .updateProduct(_existingProduct.id, _existingProduct);
+    } else {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .addProduct(_existingProduct);
+    }
     Navigator.of(context).pop();
     // setState(() {
     //   // i have added setState because when i click the save button the
     //   // image in container doesn't previewed but when i click done button
     //   // on the keyboard the image was previewing .
     // });
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      final productId = ModalRoute.of(context)?.settings.arguments as String?;
+      print('Here is my product id in editProudct Screen : $productId');
+      if (productId != null) {
+        _existingProduct = Provider.of<ProductsProvider>(context, listen: false)
+            .findById(productId);
+        initValues = {
+          'title': _existingProduct.title,
+          'description': _existingProduct.description,
+          'price': _existingProduct.price.toString(),
+          'imageUrl': '',
+        };
+        _imageController.text = _existingProduct.imageUrl;
+      }
+    }
+    isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -85,6 +120,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: initValues['title'],
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
@@ -95,6 +131,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 onSaved: (newValue) {
                   _existingProduct = Product(
                     id: _existingProduct.id,
+                    isFavourite: _existingProduct.isFavourite,
                     title: newValue.toString(),
                     price: _existingProduct.price,
                     imageUrl: _existingProduct.imageUrl,
@@ -109,6 +146,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 },
               ),
               TextFormField(
+                initialValue: initValues['price'],
                 decoration: const InputDecoration(
                   labelText: 'price',
                 ),
@@ -121,6 +159,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 onSaved: (newValue) {
                   _existingProduct = Product(
                     id: _existingProduct.id,
+                    isFavourite: _existingProduct.isFavourite,
                     title: _existingProduct.title,
                     price: double.parse(newValue!),
                     imageUrl: _existingProduct.imageUrl,
@@ -137,6 +176,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 },
               ),
               TextFormField(
+                initialValue: initValues['description'],
                 decoration: const InputDecoration(
                   labelText: 'Description',
                 ),
@@ -146,6 +186,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 onSaved: (newValue) {
                   _existingProduct = Product(
                     id: _existingProduct.id,
+                    isFavourite: _existingProduct.isFavourite,
                     title: _existingProduct.title,
                     price: _existingProduct.price,
                     imageUrl: _existingProduct.imageUrl,
@@ -189,6 +230,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                       onSaved: (newValue) {
                         _existingProduct = Product(
                           id: _existingProduct.id,
+                          isFavourite: _existingProduct.isFavourite,
                           title: _existingProduct.title,
                           price: _existingProduct.price,
                           imageUrl: newValue.toString(),
@@ -198,11 +240,11 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                       validator: (value) {
                         if (value!.isEmpty) return 'Enter an Image Url';
                         if ((!_imageController.text.startsWith('http') &&
-                            !_imageController.text.startsWith('https')) ||
-                            ( !_imageController.text.endsWith('.jpg') &&
+                                !_imageController.text.startsWith('https')) ||
+                            (!_imageController.text.endsWith('.jpg') &&
                                 !_imageController.text.endsWith('.png') &&
                                 !_imageController.text.endsWith('.jpeg'))) {
-                          return 'Enter a valid Url' ;
+                          return 'Enter a valid Url';
                         }
                         return null;
                       },
