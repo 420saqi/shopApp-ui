@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopapp/provider/product.dart';
+import 'package:shopapp/provider/product_provider.dart';
 
 class EditProductsScreen extends StatefulWidget {
   const EditProductsScreen({super.key});
@@ -46,11 +48,19 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   }
 
   void _saveFormData() {
+    final isValid = _formKey.currentState!.validate();
+    if(!isValid)
+      {
+        return ;
+      }
     _formKey.currentState?.save();
-    print(_existingProduct.title);
-    print(_existingProduct.price);
-    print(_existingProduct.description);
-    print(_existingProduct.imageUrl);
+    Provider.of<ProductsProvider>(context).addProduct(_existingProduct);
+    Navigator.of(context).pop();
+    // setState(() {
+    //   // i have added setState because when i click the save button the
+    //   // image in container doesn't previewed but when i click done button
+    //   // on the keyboard the image was previewing .
+    // });
   }
 
   @override
@@ -61,7 +71,10 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
         actions: [
           TextButton(
             onPressed: _saveFormData,
-            child: const Text('Save',style: TextStyle(color: Colors.white),),
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -88,6 +101,12 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                     description: _existingProduct.description,
                   );
                 },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter a valid title';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(
@@ -108,6 +127,14 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                     description: _existingProduct.description,
                   );
                 },
+                validator: (value) {
+                  if (value!.isEmpty) return 'Enter Price';
+                  if (double.tryParse(value) == null) {
+                    return 'Enter a valid number';
+                  }
+                  if (double.parse(value) <= 0) return 'Enter price above zero';
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(
@@ -124,6 +151,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                     imageUrl: _existingProduct.imageUrl,
                     description: newValue.toString(),
                   );
+                },
+                validator: (value) {
+                  if (value!.isEmpty) return 'Enter Price';
+                  if (value.length < 10) {
+                    return 'Length should be greater than 10';
+                  }
+                  return null;
                 },
               ),
               Row(
@@ -160,6 +194,17 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                           imageUrl: newValue.toString(),
                           description: _existingProduct.description,
                         );
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) return 'Enter an Image Url';
+                        if ((!_imageController.text.startsWith('http') &&
+                            !_imageController.text.startsWith('https')) ||
+                            ( !_imageController.text.endsWith('.jpg') &&
+                                !_imageController.text.endsWith('.png') &&
+                                !_imageController.text.endsWith('.jpeg'))) {
+                          return 'Enter a valid Url' ;
+                        }
+                        return null;
                       },
                       // onEditingComplete: () {
                       //   setState(() {});

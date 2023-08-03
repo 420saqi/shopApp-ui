@@ -1,10 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 
 import 'product.dart';
 
-class ProductsProvider with ChangeNotifier{
-  List<Product> _items =[
+class ProductsProvider with ChangeNotifier {
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -38,20 +37,29 @@ class ProductsProvider with ChangeNotifier{
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
-  List<Product> get items{
+
+  List<Product> get items {
     return [..._items]; // reutrn a copy of _items list
   }
 
-  List<Product> get favouriteItems{
+  List<Product> get favouriteItems {
     return _items.where((product) => product.isFavourite).toList();
   }
 
-  void addProduct(){
+  void addProduct(Product product) {
+    final newProduct = Product(
+        id: DateTime.now().toString(),
+        title: product.title,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        description: product.description);
+
+    _items.add(newProduct); // add at the end of the list
+    // _items.insert(0, newProduct); // add at the beginning of the list
     notifyListeners();
   }
 
-  Product findById(String id)
-  {
-   return  _items.firstWhere((productItem) => productItem.id== id);
+  Product findById(String id) {
+    return _items.firstWhere((productItem) => productItem.id == id);
   }
 }
