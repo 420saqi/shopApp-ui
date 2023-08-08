@@ -18,7 +18,9 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   final _imageController = TextEditingController();
   final _imageUrlFocuNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+
   bool isInit = true;
+  bool _isLoading = false;
   var _existingProduct = Product(
     id: '',
     title: '',
@@ -55,21 +57,49 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     setState(() {});
   }
 
-  void _saveFormData() {
+  Future<void> _saveFormData() async{
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
     _formKey.currentState?.save();
+    setState(() {
+      _isLoading =true;
+    });
     if (_existingProduct.id.isNotEmpty) // means product already exists
     {
-      Provider.of<ProductsProvider>(context, listen: false)
+     await Provider.of<ProductsProvider>(context, listen: false)
           .updateProduct(_existingProduct.id, _existingProduct);
+
     } else {
-      Provider.of<ProductsProvider>(context, listen: false)
-          .addProduct(_existingProduct);
+     try{
+       await Provider.of<ProductsProvider>(context, listen: false)
+           .addProduct(_existingProduct);
+     }catch(error)
+    {
+     await showDialog(context: context, builder: (context) => AlertDialog(
+        title: const Text('An error occurred'),
+        content: const Text('Something went wrong'),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.of(context).pop();
+          }, child: const Text('Ok'))
+        ],
+      ),);
     }
+    // finally {
+    //    setState(() {
+    //      _isLoading =false;
+    //      Navigator.of(context).pop();
+    //    });
+    //  }
+    }
+    setState(() {
+      _isLoading =false;
+    });
+    Future.delayed(Duration.zero).then((value) {
     Navigator.of(context).pop();
+    });
     // setState(() {
     //   // i have added setState because when i click the save button the
     //   // image in container doesn't previewed but when i click done button
@@ -113,7 +143,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body:_isLoading ? Center(child: const CircularProgressIndicator()) : Padding(
         padding: const EdgeInsets.all(18.0),
         child: Form(
           key: _formKey,
@@ -243,7 +273,9 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                                 !_imageController.text.startsWith('https')) ||
                             (!_imageController.text.endsWith('.jpg') &&
                                 !_imageController.text.endsWith('.png') &&
-                                !_imageController.text.endsWith('.jpeg'))) {
+                                !_imageController.text.endsWith('.jpeg') &&
+                            !_imageController.text.endsWith('.webp')
+                            )) {
                           return 'Enter a valid Url';
                         }
                         return null;
