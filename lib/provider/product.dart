@@ -1,5 +1,8 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier{
   final String id;
@@ -18,9 +21,30 @@ class Product with ChangeNotifier{
     this.isFavourite=false,
   });
 
-  void toogleFavouriteStatus(){
+  Future<void> toogleFavouriteStatus()async{
+
+    final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
+    try{
+      final url =
+        'https://shopapp18gb-default-rtdb.firebaseio.com/products/$id.json';
+      final response = await http.patch(Uri.parse(url),body: json.encode({
+        'isFavourite' : isFavourite,
+      }));
+      print(isFavourite);
+      print(oldStatus);
+      print(response.statusCode);
+      if(response.statusCode >=400)
+        {
+          isFavourite = oldStatus;
+          notifyListeners();
+        }
+    }catch(error){
+      isFavourite = oldStatus;
+      notifyListeners();
+    }
+
   }
 
 }
